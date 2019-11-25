@@ -7,14 +7,11 @@ import { Drawer, AppBar, Toolbar, CssBaseline, Typography, IconButton, List, Lis
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-
 
 import NavList from '../components/NavList';
 import { routes } from '../route';
 
-const drawerWidth = 200;
+const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -69,6 +66,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: theme.spacing(0, 1),
+    backgroundColor: '#fdfdfd',
     ...theme.mixins.toolbar,
   },
   content: {

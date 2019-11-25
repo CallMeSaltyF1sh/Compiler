@@ -27,8 +27,7 @@ const NavList = (props) => {
                                 </ListItemIcon>
                                 <ListItemText primary={item.sideBarName} />
                             </ListItem>
-                        </Link>
-                    )
+                        </Link>)
                     )
                 }
             </List>

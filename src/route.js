@@ -1,17 +1,29 @@
 //import React from 'react';
 //import { Route } from 'react-router-dom';
 import CodePane from './containers/CodePane';
-import { Dashboard } from '@material-ui/icons';
-//import CodeIcon from '@material-ui/icons/Code';
+import Plot from './containers/Plot';
+import Details from './containers/Details';
 import CodeRoundedIcon from '@material-ui/icons/CodeRounded';
-import FilterIcon from '@material-ui/icons/Filter';
-import CollectionsRoundedIcon from '@material-ui/icons/CollectionsRounded';
+import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
+import BrushRoundedIcon from '@material-ui/icons/BrushRounded';
 
 export const routes = [
     {
-        path: '/',
+        path: '/codepane',
         component: CodePane,
         icon: CodeRoundedIcon,
-        sideBarName: 'CodePane'
+        sideBarName: 'Code Pane'
+    },
+    {
+        path: '/plot',
+        component: Plot,
+        icon: BrushRoundedIcon,
+        sideBarName: 'Produced Pattern'
+    },
+    {
+        path: '/details',
+        component: Details,
+        icon: EqualizerRoundedIcon,
+        sideBarName: 'Detailed Info'
     }
 ]
