@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, Button } from '@material-ui/core';
 import { purple } from '@material-ui/core/colors';
+import Scanner from '../compiler/scanner';
 
 const styles = {
     container: {
@@ -15,7 +16,7 @@ const styles = {
         marginRight: '1%',
         marginTop: '1vh',
         width: '96%',
-        backgroundColor: '#f9f9f9',
+        backgroundColor: '#fff',
         borderRadius: 10,
         boxShadow: '0 5px 20px #999',
         '& .MuiOutlinedInput-root': {
@@ -62,6 +63,8 @@ function CodePane(props) {
     const handleCompile = event => {
         const code = value;
         console.log("clicked")
+        let scanner = new Scanner(code);
+        scanner.printTokens();
     }
 
     return (
