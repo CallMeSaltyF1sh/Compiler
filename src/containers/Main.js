@@ -9,6 +9,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import NavList from '../components/NavList';
+import CodePane from '../containers/CodePane';
 import { routes } from '../route';
 
 const drawerWidth = 240;
@@ -142,6 +143,7 @@ export default function Main() {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
+          <Route path='/' exact component={CodePane} key='/' />
           {
             routes.map(item =>
               <Route path={item.path} component={item.component} key={item.path} />

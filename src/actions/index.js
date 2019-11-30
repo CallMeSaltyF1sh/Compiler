@@ -1,7 +1,6 @@
 import * as types from '../constants/actionTypes'
 
-export const sendCode = () => dispatch => {
-    dispatch({
-        type: types.SEND_CODE
-    })
-}
+export const sendCodes = codes => ({
+    type: types.SEND_CODES,
+    codes: codes
+});

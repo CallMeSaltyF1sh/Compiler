@@ -95,9 +95,9 @@ Scanner.prototype.getToken = function () {
             }
         }
         this.backChar(char);
+        
         token.setType(TokenTypes.CONST_ID);
         token.setValue(Number(this.tokenBuffer));
-        //console.log(this.tokenBuffer)
         token.setLexeme(this.tokenBuffer);
         return token;
     }
@@ -168,12 +168,10 @@ Scanner.prototype.getToken = function () {
                     break;
                 }
             default:
-                console.log('here')
                 token.setType(TokenTypes.ERRTOKEN);
                 break;
         }
     }
-    //console.log(this.tokenBuffer)
     token.setLexeme(this.tokenBuffer);
     return token;
 }

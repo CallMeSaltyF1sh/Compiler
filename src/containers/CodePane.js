@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, Button } from '@material-ui/core';
 import { purple } from '@material-ui/core/colors';
 import Scanner from '../compiler/scanner';
+import { sendCodes } from '../actions/index';
 
 const styles = {
     container: {
@@ -50,9 +52,9 @@ const ColorButton = withStyles(theme => ({
     },
 }))(Button);
 
-function CodePane(props) {
+const CodePane = (props) => {
     //const classes = useStyles();
-    const { classes } = props;
+    const { classes, sendCodes } = props;
     const [value, setValue] = React.useState('Controlled');
 
     const handleChange = event => {
@@ -65,6 +67,7 @@ function CodePane(props) {
         console.log("clicked")
         let scanner = new Scanner(code);
         scanner.printTokens();
+        sendCodes(code);
     }
 
     return (
@@ -92,4 +95,11 @@ CodePane.propTypes = {
     className: PropTypes.string,
 };
 
-export default withStyles(styles)(CodePane);
+const stateMapToProps = (state) => {
+    return {}
+};
+const dispatchMapToProps = dispatch => ({
+    sendCodes: (codes) => dispatch(sendCodes(codes))
+});
+
+export default connect(stateMapToProps, dispatchMapToProps)(withStyles(styles)(CodePane));

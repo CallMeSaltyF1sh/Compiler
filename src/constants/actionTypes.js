@@ -1,1 +1,1 @@
-export const SEND_CODE = 'SEND_CODE';
+export const SEND_CODES = 'SEND_CODES';
