@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Drawer, AppBar, Toolbar, CssBaseline, Typography, IconButton, List, ListItem, ListItemText, ListItemIcon, Divider } from '@material-ui/core';
+import { Drawer, AppBar, Toolbar, CssBaseline, Typography, IconButton, List } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';

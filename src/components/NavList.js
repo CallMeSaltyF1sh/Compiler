@@ -20,7 +20,7 @@ const NavList = (props) => {
             <List component='nav'>
                 {
                     list.map(item => (
-                        <Link to={item.path} style={{ textDecoration: 'none', color: '#888' }}>
+                        <Link to={item.path} style={{ textDecoration: 'none', color: '#888' }} key={item.path}>
                             <ListItem button>
                                 <ListItemIcon>
                                     <item.icon />

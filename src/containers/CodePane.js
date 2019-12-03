@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { TextField, Button } from '@material-ui/core';
 import { purple } from '@material-ui/core/colors';
 import Scanner from '../compiler/scanner';
+import Parser from '../compiler/parser';
 import { sendCodes } from '../actions/index';
 
 const styles = {
@@ -65,9 +66,11 @@ const CodePane = (props) => {
     const handleCompile = event => {
         const code = value;
         console.log("clicked")
-        let scanner = new Scanner(code);
-        scanner.printTokens();
         sendCodes(code);
+       // let scanner = new Scanner(code);
+        //scanner.printTokens();
+        let parser = new Parser(code);
+        parser.run();
     }
 
     return (
