@@ -8,6 +8,11 @@ export default function Scanner(code) {
     this.lineNo = 1;  //行号
     this.tokenBuffer = "";  //字符缓冲区
     //this.bufferSize = 100;
+    this.tempBuffer = "";
+}
+
+Scanner.prototype.getTempBuffer = function() {
+    return this.tempBuffer;
 }
 
 Scanner.prototype.getChar = function () {
@@ -16,11 +21,22 @@ Scanner.prototype.getChar = function () {
     }
     const char = this.code.charAt(0);
     this.code = this.code.slice(1);
+
+    if(char === ';') {
+        this.tempBuffer = "";
+    } else {
+        this.tempBuffer += char;
+       // console.log(this.tempBuffer);
+    }
+    
     return char;
 }
 
 Scanner.prototype.backChar = function (char) {
     this.code = char + this.code;
+    if(this.tempBuffer.length) {
+        this.tempBuffer = this.tempBuffer.substring(0, this.tempBuffer.length - 1);
+    }
 }
 
 Scanner.prototype.addToBuffer = function (char) {
@@ -174,10 +190,6 @@ Scanner.prototype.getToken = function () {
     }
     token.setLexeme(this.tokenBuffer);
     return token;
-}
-
-Scanner.prototype.backToken = function() {
-
 }
 
 Scanner.prototype.printTokens = function() {

@@ -2,6 +2,7 @@ import Token from './token';
 import Scanner from '../compiler/scanner';
 import * as TokenTypes from './tokenType';
 import { syntaxError } from './handleError';
+import { thisTypeAnnotation } from '@babel/types';
 
 function TreeNode(type) {
     this.type = type;   //语法树节点类型
@@ -59,7 +60,7 @@ function DeleteTree(root) {
     root = null;
 }
 
-Parser.prototype.getNodeValue = function(root) {
+Parser.prototype.getNodeValue = function (root) {
     if (root === null) {
         return 0.0;
     }
@@ -162,6 +163,7 @@ function match(token) {
 }
 
 export default function Parser(code, parameter = 0, Origin_x = 0, Origin_y = 0, Scale_x = 1, Scale_y = 1, Rot_angle = 0) {
+    this.code = code;
     this.scanner = new Scanner(code);
     this.dotList = [];
     this.token = new Token(TokenTypes.ERRTOKEN, "", 0);
@@ -233,7 +235,7 @@ Parser.prototype.OriginStatement = function () {
     exit("OriginStatement");
 }
 
-Parser.prototype.ScaleStatement = function() {
+Parser.prototype.ScaleStatement = function () {
     let node = null;
     enter("ScaleStatement");
     this.matchToken(TokenTypes.SCALE);
@@ -250,7 +252,7 @@ Parser.prototype.ScaleStatement = function() {
     exit("ScaleStatement");
 }
 
-Parser.prototype.RotStatement = function() {
+Parser.prototype.RotStatement = function () {
     let node = null;
     enter("RotStatement");
     this.matchToken(TokenTypes.ROT);
@@ -261,30 +263,28 @@ Parser.prototype.RotStatement = function() {
     exit("RotStatement");
 }
 
-Parser.prototype.CalcCoord = function(xnode, ynode) {
-    let tmp1, tmp2;
+Parser.prototype.CalcCoord = function (xnode, ynode) {
+    let tmp1, tmp2, tmp3;
     tmp1 = this.getNodeValue(xnode);
     tmp2 = this.getNodeValue(ynode);
     tmp1 *= this.Scale_x;
     tmp2 *= this.Scale_y;
-    tmp1 = tmp1 * Math.cos(this.Rot_angle) + tmp2 * Math.sin(this.Rot_angle);
+    console.log(tmp1)
+    console.log(tmp2)
+    tmp3 = tmp1 * Math.cos(this.Rot_angle) + tmp2 * Math.sin(this.Rot_angle);
     tmp2 = tmp2 * Math.cos(this.Rot_angle) - tmp1 * Math.sin(this.Rot_angle);
+    tmp1 = tmp3;
     tmp1 += this.Origin_x;
     tmp2 += this.Origin_y;
-    return {x:tmp1, y:tmp2};
+    return { x: tmp1, y: tmp2 };
 }
 
-Parser.prototype.DrawLoop = function(start, end, step, xnode, ynode) {
-    let pos = {};
-    for(let i = start; i <= end; i += step) {
-        pos = this.CalcCoord(xnode, ynode);
-        this.dotList.push(pos);
-    }
-}
-
-Parser.prototype.ForStatement = function() {
+Parser.prototype.ForStatement = function () {
     let start, end, step, xnode, ynode;
     let node = null;
+    let str = '';
+    let pos = {};
+
     enter("ForStatement");
     this.matchToken(TokenTypes.FOR);
     match("FOR");
@@ -307,22 +307,40 @@ Parser.prototype.ForStatement = function() {
     node = this.Expression();
     step = this.getNodeValue(node);
     DeleteTree(node);
+    console.log(this.scanner.tempBuffer);
+    console.log(this.scanner.code);
 
-    this.matchToken(TokenTypes.DRAW);
-    match("DRAW");
-    this.matchToken(TokenTypes.L_BRACKET);
-    match("(");
-    xnode = this.Expression();
-    this.matchToken(TokenTypes.COMMA);
-    match(",");
-    ynode = this.Expression();
-    this.matchToken(TokenTypes.R_BRACKET);
-    match(")");
+    for (this.parameter = start; this.parameter <= end; this.parameter += step) {
+        this.matchToken(TokenTypes.DRAW);
+        match("DRAW");
+        this.matchToken(TokenTypes.L_BRACKET);
+        match("(");
+        xnode = this.Expression();
+        this.matchToken(TokenTypes.COMMA);
+        match(",");
+        ynode = this.Expression();
+        if (this.parameter === start) {
+            str = this.scanner.tempBuffer;
+            console.log(str);
+            console.log(this.scanner.code);
+            str = str.substring(str.lastIndexOf('DRAW'), str.length)
+            console.log(str);
+        }
+        if(this.parameter + step <= end) {
+            this.scanner.code = str + this.scanner.code;
+        }
+        console.log(this.scanner.code)
+        this.matchToken(TokenTypes.R_BRACKET);
+        match(")");
+        pos = this.CalcCoord(xnode, ynode);
+        this.dotList.push(pos);
+        DeleteTree(xnode);
+        DeleteTree(ynode);
+    }
 
-    this.DrawLoop(start, end, step, xnode, ynode);
-    DeleteTree(xnode);
-    DeleteTree(ynode);
     exit("ForStatement");
+    this.parameter = 0;
+    console.log(this.dotList)
 }
 
 Parser.prototype.Expression = function () {

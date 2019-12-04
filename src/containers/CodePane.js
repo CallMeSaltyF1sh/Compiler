@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -7,6 +7,7 @@ import { purple } from '@material-ui/core/colors';
 import Scanner from '../compiler/scanner';
 import Parser from '../compiler/parser';
 import { sendCodes } from '../actions/index';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid } from 'recharts';
 
 const styles = {
     container: {
@@ -56,6 +57,7 @@ const ColorButton = withStyles(theme => ({
 const CodePane = (props) => {
     //const classes = useStyles();
     const { classes, sendCodes } = props;
+    const [data, setData] = useState([]);
     const [value, setValue] = React.useState('Controlled');
 
     const handleChange = event => {
@@ -70,7 +72,9 @@ const CodePane = (props) => {
        // let scanner = new Scanner(code);
         //scanner.printTokens();
         let parser = new Parser(code);
+        //console.log(parser)
         parser.run();
+        setData(parser.dotList);
     }
 
     return (
@@ -87,6 +91,14 @@ const CodePane = (props) => {
                 variant="outlined"
             />
             <ColorButton variant="outlined" className={classes.btn} onClick={handleCompile}>Compile</ColorButton>
+
+            <ScatterChart width={720} height={660}
+                margin={{ top: 20, right: 20, bottom: 10, left: 10 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="x" name="x" type='number' interval={0} domain={[0,500]}/>
+                    <YAxis dataKey="y" name="y" type='number' interval={0} domain={[0,500]}/>
+                <Scatter name="A school" data={data} fill="#8884d8" />
+            </ScatterChart>
         </div>
 
     );
