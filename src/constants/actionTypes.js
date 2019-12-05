@@ -1,1 +1,3 @@
 export const SEND_CODES = 'SEND_CODES';
+export const SEND_DOTLIST = 'SEND_DOTLIST';
+export const SEND_TOKENLIST = 'SEND_TOKENLIST';

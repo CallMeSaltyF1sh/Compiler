@@ -1,42 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Parser from '../compiler/parser';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { withStyles } from '@material-ui/core/styles';
+import { Paper } from '@material-ui/core';
+
+const styles = {
+    paper: {
+        width: '100%',
+        margin: 'auto',
+        height: 'auto'
+    }
+};
 
 function Plot(props) {
-    const { codes } = props;
-    const [data, setData] = useState([]);
-
-    useEffect(() => {
-        let parser = new Parser(codes);
-        parser.run();
-        //setData(parser.dotList);
-    });
+    const { dotlist, classes } = props;
+    const [data, setData] = useState(dotlist);
 
     return (
         <div>
-            <ScatterChart width={730} height={250}
-                margin={{ top: 20, right: 20, bottom: 10, left: 10 }}>
+            <Paper className={classes.paper}>
+            <ScatterChart width={520} height={500}
+                margin={{ top: 50, right: 20, bottom: 10, left: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="x" name="x" />
-                <YAxis dataKey="y" name="y" />
-                <Scatter name="A school" data={data} fill="#8884d8" />
+                <XAxis dataKey="x" name="x" type='number' interval={0} domain={[0, 500]} />
+                <YAxis dataKey="y" name="y" type='number' interval={0} domain={[0, 500]} />
+                <Scatter name="dot" data={data} fill="#8884d8" />
             </ScatterChart>
+            </Paper>
         </div>
     )
 }
 
 Plot.propTypes = {
-    codes: PropTypes.string.isRequired
-}
+    dotlist: PropTypes.array.isRequired,
+    classes: PropTypes.object.isRequired,
+};
 
 const stateMapToProps = (state) => {
     return {
-        codes: state.codes
+        dotlist: state.dotlist
     }
 };
-const dispatchMapToProps = dispatch => ({
-});
 
-export default connect(stateMapToProps, dispatchMapToProps)(Plot);
+export default connect(stateMapToProps)(withStyles(styles)(Plot));

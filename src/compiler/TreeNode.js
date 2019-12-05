@@ -6,4 +6,3 @@ export default function TreeNode(type) {
     this.const = null;  //常数
     this.param = null;  //参数
 }
-

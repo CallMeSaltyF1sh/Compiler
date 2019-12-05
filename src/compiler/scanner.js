@@ -192,7 +192,12 @@ Scanner.prototype.getToken = function () {
     return token;
 }
 
+function createData(type, lexeme, value) {
+    return { type, lexeme, value };
+}
+
 Scanner.prototype.printTokens = function() {
+    let tokenArr = []
     let token = this.getToken();
     while(token.getType() !== TokenTypes.NONTOKEN) {
         if(token.getType() === TokenTypes.ERRTOKEN) {
@@ -200,6 +205,8 @@ Scanner.prototype.printTokens = function() {
             break;
         }
         console.log(`${token.getType()}  ${token.getLexeme()}  ${token.getValue()}`);
+        tokenArr.push(createData(token.getType(),token.getLexeme(),token.getValue()));
         token = this.getToken();
     }
+    return tokenArr;
 }

@@ -2,17 +2,7 @@ import Token from './token';
 import Scanner from '../compiler/scanner';
 import * as TokenTypes from './tokenType';
 import { syntaxError } from './handleError';
-import { thisTypeAnnotation } from '@babel/types';
-
-function TreeNode(type) {
-    this.type = type;   //语法树节点类型
-    this.left = null;
-    this.right = null;
-    this.funcType = null;
-    this.funcChild = null;
-    this.value = null;  //常数
-    this.param = null;  //参数
-}
+import TreeNode from './TreeNode';
 
 function MakeConstNode(value) {
     let node = new TreeNode(TokenTypes.CONST_ID);
@@ -91,7 +81,6 @@ Parser.prototype.getNodeValue = function (root) {
                     return Math.sqrt(this.getNodeValue(root.funcChild));
                 default:
                     syntaxError(2, this.scanner, this.token);
-                    console.log("getNodevalue error")
                     return;
             }
         case TokenTypes.CONST_ID:
@@ -105,7 +94,7 @@ Parser.prototype.getNodeValue = function (root) {
 
 function PrintTreeNode(root, indent) {
     for (let i = 1; i <= indent; i++) {
-        console.log("\t");
+        console.log("... ");
     }
     switch (root.type) {
         case TokenTypes.PLUS:
@@ -163,7 +152,6 @@ function match(token) {
 }
 
 export default function Parser(code, parameter = 0, Origin_x = 0, Origin_y = 0, Scale_x = 1, Scale_y = 1, Rot_angle = 0) {
-    this.code = code;
     this.scanner = new Scanner(code);
     this.dotList = [];
     this.token = new Token(TokenTypes.ERRTOKEN, "", 0);
@@ -307,8 +295,8 @@ Parser.prototype.ForStatement = function () {
     node = this.Expression();
     step = this.getNodeValue(node);
     DeleteTree(node);
-    console.log(this.scanner.tempBuffer);
-    console.log(this.scanner.code);
+    //console.log(this.scanner.tempBuffer);
+   // console.log(this.scanner.code);
 
     for (this.parameter = start; this.parameter <= end; this.parameter += step) {
         this.matchToken(TokenTypes.DRAW);
@@ -321,15 +309,15 @@ Parser.prototype.ForStatement = function () {
         ynode = this.Expression();
         if (this.parameter === start) {
             str = this.scanner.tempBuffer;
-            console.log(str);
-            console.log(this.scanner.code);
+           // console.log(str);
+            //console.log(this.scanner.code);
             str = str.substring(str.lastIndexOf('DRAW'), str.length)
-            console.log(str);
+           // console.log(str);
         }
         if(this.parameter + step <= end) {
             this.scanner.code = str + this.scanner.code;
         }
-        console.log(this.scanner.code)
+       // console.log(this.scanner.code)
         this.matchToken(TokenTypes.R_BRACKET);
         match(")");
         pos = this.CalcCoord(xnode, ynode);
