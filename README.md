@@ -1,2 +1,2 @@
-# Simple online compiler
-简易函数绘图语言在线编译器
+# Simple online interpreter
+简易函数绘图语言在线解释器

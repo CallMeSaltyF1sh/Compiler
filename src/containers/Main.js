@@ -113,7 +113,7 @@ export default function Main() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
-              Simple Online Compiler
+              Simple Online Interpreter
           </Typography>
           </Toolbar>
         </AppBar>

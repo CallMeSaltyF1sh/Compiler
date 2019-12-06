@@ -199,14 +199,17 @@ function createData(type, lexeme, value) {
 Scanner.prototype.printTokens = function() {
     let tokenArr = []
     let token = this.getToken();
+    let error = false;
     while(token.getType() !== TokenTypes.NONTOKEN) {
         if(token.getType() === TokenTypes.ERRTOKEN) {
             console.log(`Line No ${this.lineNo}: Error token ${token.getLexeme()}`);
+            error = true;
             break;
         }
         console.log(`${token.getType()}  ${token.getLexeme()}  ${token.getValue()}`);
         tokenArr.push(createData(token.getType(),token.getLexeme(),token.getValue()));
         token = this.getToken();
     }
-    return tokenArr;
+
+    return error ? -1 : tokenArr;
 }

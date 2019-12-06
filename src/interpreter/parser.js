@@ -1,5 +1,5 @@
 import Token from './token';
-import Scanner from '../compiler/scanner';
+import Scanner from './scanner';
 import * as TokenTypes from './tokenType';
 import { syntaxError } from './handleError';
 import TreeNode from './TreeNode';
@@ -81,6 +81,7 @@ Parser.prototype.getNodeValue = function (root) {
                     return Math.sqrt(this.getNodeValue(root.funcChild));
                 default:
                     syntaxError(2, this.scanner, this.token);
+                    this.error = true;
                     return;
             }
         case TokenTypes.CONST_ID:
@@ -155,6 +156,7 @@ export default function Parser(code, parameter = 0, Origin_x = 0, Origin_y = 0, 
     this.scanner = new Scanner(code);
     this.dotList = [];
     this.token = new Token(TokenTypes.ERRTOKEN, "", 0);
+    this.error = false;
 
     this.parameter = parameter;
     this.Origin_x = Origin_x;
@@ -168,13 +170,14 @@ Parser.prototype.fetchToken = function () {
     this.token = this.scanner.getToken();
     if (this.token.getType() === TokenTypes.ERRTOKEN) {
         syntaxError(1, this.scanner, this.token);
+        this.error = true;
     }
 }
 
 Parser.prototype.matchToken = function (tokenType) {
     if (this.token.getType() !== tokenType) {
         syntaxError(2, this.scanner, this.token);
-        console.log("match error")
+        this.error = true;
     }
     this.fetchToken();
 }
@@ -202,7 +205,7 @@ Parser.prototype.Statement = function () {
             break;
         default:
             syntaxError(2, this.scanner, this.token);
-            console.log("statement error")
+            this.error = true;
     }
 }
 
@@ -426,7 +429,7 @@ Parser.prototype.Atom = function () {
             break;
         default:
             syntaxError(2, this.scanner, this.token);
-            console.log("Atom error")
+            this.error = true;
     }
     return node;
 }
@@ -436,4 +439,6 @@ Parser.prototype.run = function () {
     this.fetchToken();
     this.program();
     exit("Parser");
+
+    return this.error;
 }

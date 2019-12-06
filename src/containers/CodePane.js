@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, Button, } from '@material-ui/core';
+import { TextField, Button, Snackbar, IconButton } from '@material-ui/core';
 import { purple } from '@material-ui/core/colors';
-import Scanner from '../compiler/scanner';
-import Parser from '../compiler/parser';
+import CloseIcon from '@material-ui/icons/Close';
+import Scanner from '../interpreter/scanner';
+import Parser from '../interpreter/parser';
 import { sendCodes, sendDotlist, sendTokenlist } from '../actions/index';
 
 const styles = {
@@ -39,8 +40,13 @@ const styles = {
     btn: {
         marginTop: '30px',
         marginLeft: '1%',
-        width: '12%'
+        width: '15%'
     },
+
+    close: {
+        padding: '5px'
+    },
+
 };
 
 const ColorButton = withStyles(theme => ({
@@ -56,8 +62,14 @@ const ColorButton = withStyles(theme => ({
 const CodePane = (props) => {
     //const classes = useStyles();
     const { classes, sendCodes, sendDotlist, sendTokenlist, codes } = props;
-  
-    const [value, setValue] = useState('Controlled');
+
+    const [value, setValue] = useState('');
+    const [open, setOpen] = React.useState(false);
+
+
+    const handleClose = (event, reason) => {
+        setOpen(false);
+    };
 
     const handleChange = event => {
         setValue(event.target.value);
@@ -69,13 +81,24 @@ const CodePane = (props) => {
 
         const scanner = new Scanner(code);
         let temp = scanner.printTokens();
-        
-        sendTokenlist(temp);
+        if (temp === -1) {
+            sendTokenlist([]);
+            sendDotlist([]);
+            setOpen(true);
+        } else {
+            sendTokenlist(temp);
 
-        const parser = new Parser(code);
-        parser.run();
-        
-        sendDotlist(parser.dotList);
+            const parser = new Parser(code);
+            const error = parser.run();
+            if (error) {
+                sendTokenlist([]);
+                sendDotlist([]);
+                setOpen(true);
+            } else {
+                sendDotlist(parser.dotList);
+            }
+        }
+
     }
 
     return (
@@ -91,7 +114,32 @@ const CodePane = (props) => {
                 className={classes.textField}
                 variant="outlined"
             />
-            <ColorButton variant="outlined" className={classes.btn} onClick={handleCompile}>Compile</ColorButton>  
+            <ColorButton variant="outlined" className={classes.btn} onClick={handleCompile}>Run it</ColorButton>
+
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                ContentProps={{
+                    'aria-describedby': 'message-id',
+                }}
+                message={<span id="message-id">syntaxError occured!</span>}
+                action={[
+                    <IconButton
+                        key="close"
+                        aria-label="close"
+                        color="inherit"
+                        className={classes.close}
+                        onClick={handleClose}
+                    >
+                        <CloseIcon />
+                    </IconButton>,
+                ]}
+            />
         </div>
 
     );

@@ -21,7 +21,7 @@ function Plot(props) {
         <div>
             <Paper className={classes.paper}>
             <ScatterChart width={520} height={500}
-                margin={{ top: 50, right: 20, bottom: 10, left: 10 }}>
+                margin={{ top: 40, right: 20, bottom: 25, left: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="x" name="x" type='number' interval={0} domain={[0, 500]} />
                 <YAxis dataKey="y" name="y" type='number' interval={0} domain={[0, 500]} />
