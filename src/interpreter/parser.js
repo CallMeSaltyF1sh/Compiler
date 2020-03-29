@@ -58,7 +58,7 @@ Parser.prototype.getNodeValue = function (root) {
         case TokenTypes.PLUS:
             return this.getNodeValue(root.left) + this.getNodeValue(root.right);
         case TokenTypes.MINUS:
-            return this.getNodeValue(root.left) + this.getNodeValue(root.right);
+            return this.getNodeValue(root.left) - this.getNodeValue(root.right);
         case TokenTypes.MUL:
             return this.getNodeValue(root.left) * this.getNodeValue(root.right);
         case TokenTypes.DIV:
